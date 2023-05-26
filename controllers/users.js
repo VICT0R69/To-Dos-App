@@ -4,11 +4,11 @@ import { sendCookie } from "../utils/features.js";
 
 export const register = async (req, res) => {
     const { name, email, password, confirm_password } = req.body;
-    console.log(req.body)
+    // console.log(req.body)
     let user = await Users.findOne({ email })
 
     if (user) {
-        return res.status(404).json({
+        return res.json({
             success: false,
             message: "User Already Registered"
         })
@@ -22,11 +22,27 @@ export const register = async (req, res) => {
 
     sendCookie(user, res, 201)
 
-    return res.redirect('/users/login')
+    return res.redirect('/users/recovery-mail')
 }
 
 export const registerPage = async (req, res) =>{
-    res.render('register')
+    return res.render('register')
+}
+
+export const recoveryMailPage = (req, res) =>{
+    return res.render('recovery-mail')
+}
+
+export const recoveryMail = async (req, res) =>{
+    const {recoveryGmail} = req.body;
+    // console.log(recoveryGmail)
+    let user = await Users.findOne({recoveryGmail});
+    console.log(user);
+    if (user) {
+        return res.render('recovery-mail', {message: "Gmail already registered"});
+    }
+    user = await Users.create({recoveryGmail});
+    return res.redirect('/users/login');
 }
 
 export const login = async (req, res) => {
@@ -57,6 +73,30 @@ export const logout = (req, res) =>{
     res.clearCookie("Token");
     return res.redirect('/users/login')
     
+}
+
+export const forgetPasswordPage = (req, res) =>{
+    return res.render('forget-password')
+}
+
+export const forgetPassword = async (req, res) =>{
+    const {email} = req.body;
+    console.log(email)
+    const user = await Users.findOne({email});
+    console.log(user)
+    return res.status(200).redirect('reset-password')
+
+}
+
+export const resetPasswordPage = (req, res) =>{
+    return res.render('reset-password');
+}
+
+export const resetPassword = (req, res) =>{
+    res.status(200).json({
+        success: true,
+        message: "reset done"
+    })
 }
 
 export const getMyProfile = (req, res) => {

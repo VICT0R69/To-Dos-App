@@ -39,7 +39,6 @@ app.use('/task', taskRouter)
 app.get('/', isAuthenticated, async (req, res)=>{
     try{
         const allTask = await Task.find({user: req.user.id});
-        console.log(allTask)
         res.render('index' , {allTask})
 
     }catch(err){

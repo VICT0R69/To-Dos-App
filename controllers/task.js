@@ -47,7 +47,6 @@ export const updateTask = async (req, res, next) =>{
 
 export const deleteTask = async (req, res, next) =>{
 try {
-    console.log(req.params.id)
     const deleteTask = await Task.deleteOne({_id: req.params.id})
     res.redirect('/')
 

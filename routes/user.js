@@ -1,20 +1,20 @@
 import express from "express";
-import { getMyProfile, register, login, logout, loginPage, registerPage } from "../controllers/users.js";
+import { getMyProfile, register, login, logout, loginPage, registerPage, forgetPasswordPage, forgetPassword, resetPasswordPage, resetPassword, recoveryMailPage, recoveryMail } from "../controllers/users.js";
 import { isAuthenticated } from "../Middlewares/isAuth.js";
 
 const router = express.Router();
 
-router.post('/register', register);
+router.route('/register').get(registerPage).post(register);
 
-router.get('/register', registerPage)
+router.route('/recovery-mail').get(recoveryMailPage).post(recoveryMail);
 
-router.post('/login', login);
+router.route('/login').get(loginPage).post(login);
 
-router.get('/login', loginPage);
+router.route('/logout').post(logout);
 
-// router.get('/logout', isAuthenticated, logout);
+router.route('/forget-password').get(forgetPasswordPage).post(forgetPassword);
 
-router.post('/logout', logout)
+router.route('/reset-password').get(resetPasswordPage).post(resetPassword);
 
 router.get('/me', isAuthenticated, getMyProfile);
 

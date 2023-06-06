@@ -16,13 +16,18 @@ const schema = mongoose.Schema({
         required: true,
         select: false
     },
+    recoveryMail: {
+        type: String,
+        default: ""
+    },
     createdAt: {
         type: Date,
         default: Date.now()
     },
-    recoveryMail: {
-        type: String
+    OTP: {
+        type: Number
     }
+
 })
 
 // Model 

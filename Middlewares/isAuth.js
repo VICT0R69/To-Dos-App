@@ -8,7 +8,11 @@ export const isAuthenticated = async (req, res, next)=>{
     }
 
     const decoded = jwt.verify(Token, process.env.JWT_SECRET);
-    req.user = await Users.findById(decoded._id);
-    // console.log(decoded)
+    // console.log(decoded._id)
+    if(!decoded){
+        return res.redirect('/users/login')
+    }
+    const user = await Users.findById(decoded._id);
+    req.user = user;
     next();
 }

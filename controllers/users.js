@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { sendCookie } from "../utils/features.js";
 import nodemailer from 'nodemailer';
 import { name } from "ejs";
+import jwt from "jsonwebtoken";
 
 export const register = async (req, res) => {
     const { name, email, password, confirm_password } = req.body;
@@ -17,8 +18,7 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     user = await Users.create({ name, email, password: hashedPassword });
-    req.params = user.id
-    console.log(user)
+    // console.log(user)
 
     sendCookie(user, res, 201)
 
@@ -85,7 +85,12 @@ export const forgetPassword = async (req, res) =>{
     // console.log(email)
 
     const user = await Users.findOne({email});
-    // console.log(user.name)
+    // console.log(user.id)
+
+    const Token = jwt.sign({_id: user._id}, process.env.JWT_SECRET);
+    res.cookie("recoveryDetail", Token, {
+        maxAge: 30 * 1000 * 60
+    })
 
     const OTPgenerator = () =>{
         let verificationCode = Math.round(1000 + Math.random()*9000);
@@ -135,24 +140,75 @@ export const OTPpage = async (req, res) =>{
 
 export const OTP = async (req, res) =>{
     const {inputOne, inputTwo, inputThree, inputFour} = req.body;
-    console.log(inputOne, inputTwo, inputThree, inputFour)
 
-    if(inputOne !== "" && inputTwo !== "" && inputThree !== "" && inputFour !== ""){
-        // res.render('OTP', {message: "digit is missing"})
-        return res.redirect('/users/reset-password')
+    if(!inputOne || !inputTwo || !inputThree || !inputFour){
+        return res.render('OTP', {message: "Invalid Otp"})
     }
 
+    const userOtp = parseInt(inputOne + inputTwo + inputThree + inputFour);
+
+    const {recoveryDetail} = req.cookies
+
+    if (!recoveryDetail){
+        return res.redirect('/users/forget-password')
+    }
+
+    const decoded = jwt.verify(recoveryDetail, process.env.JWT_SECRET)
+    console.log(decoded)
+
+    const user = await Users.findById(decoded._id)
+    console.log(user)
+
+    if(!user){
+        return res.redirect('/users/forget-password')
+    }
+
+    if (userOtp !== user.OTP){
+        return res.render('OTP', {message: "Invalid Otp"})
+    }
+    
+    user.OTP = null;
+    await user.save();
+
+    return res.redirect('/users/reset-password')
 }
 
 export const resetPasswordPage = (req, res) =>{
     return res.render('reset-password');
 }
 
-export const resetPassword = (req, res) =>{
-    res.status(200).json({
-        success: true,
-        message: "reset done"
-    })
+export const resetPassword = async (req, res) =>{
+
+    const {recoveryDetail} = req.cookies;
+    const {new_password, confirm_new_password} = req.body;
+
+    if(new_password !== confirm_new_password){
+        return res.render('reset-password', {message: "Confirm password not matched"})
+    }
+
+    const decoded = jwt.verify(recoveryDetail, process.env.JWT_SECRET)
+
+    // console.log(decoded ,new_password, confirm_new_password)
+    
+    const user = await Users.findById(decoded._id).select("+password")
+    
+    if (!user){
+        return res.redirect('/users/forget-password')
+    }
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    // console.log("hashed",hashedPassword)
+
+    const updatePassword = await Users.updateOne({password: user.password}, {$set: {password: hashedPassword}});
+    await user.save();
+    
+    
+    console.log(updatePassword)
+
+    // user.password = new_password;
+    // await user.save();
+
+    res.redirect('/users/login')
+
 }
 
 export const getMyProfile = (req, res) => {

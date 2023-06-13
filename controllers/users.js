@@ -129,6 +129,10 @@ export const forgetPassword = async (req, res) =>{
             to: user.recoveryMail,
             subject: "ToDos App password recovery",
             html: `<p>hello ${user.name}, ${otp} is your your secret OTP to reset your password. Do not share it with anyone.</p>`
+        }).then((result)=>{
+            console.log(result)
+        }).catch((err) =>{
+            console.log(err)
         })
     }
     res.redirect('/users/otp')
@@ -200,15 +204,8 @@ export const resetPassword = async (req, res) =>{
 
     const updatePassword = await Users.updateOne({password: user.password}, {$set: {password: hashedPassword}});
     await user.save();
-    
-    
-    console.log(updatePassword)
-
-    // user.password = new_password;
-    // await user.save();
 
     res.redirect('/users/login')
-
 }
 
 export const getMyProfile = (req, res) => {

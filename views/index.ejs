@@ -14,7 +14,7 @@
   <div>
     <%- include("../partials/header.ejs") %>
       <div class=" mb-10 lg:p-6">
-        <h2 class="font-semibold text-lg h-8"><%= locals.greetings %></h2>
+        <h2 class="font-semibold lg:text-lg lg:h-6 lg:m-0 m-2"><%= locals.greetings %></h2>
         <div class="mt-10">
           <form action="/task/new" method="post" class="flex justify-center flex-col items-center my-4 lg:my-8 space-y-4 lg:space-y-8">
             <input type="text" name="title" id="" placeholder="Enter Title"

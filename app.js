@@ -41,7 +41,7 @@ app.get('/', isAuthenticated, async (req, res)=>{
         const allTask = await Task.find({user: req.user.id});
         // const user = await Users.findById()
         console.log(req.user)
-        res.render('index' , {allTask, greetings: `Hey, Welcome Back ${req.user.name}!`})
+        res.render('index' , {allTask, greetings: `Hey, ${req.user.name} Welcome Back!`})
 
     }catch(err){
         console.log(err)

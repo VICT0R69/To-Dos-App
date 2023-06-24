@@ -139,7 +139,37 @@ export const forgetPassword = async (req, res) =>{
 }
 
 export const OTPpage = async (req, res) =>{
-    return res.render('OTP')
+
+    const {recoveryDetail} = req.cookies;
+
+    const decoded = jwt.verify(recoveryDetail, process.env.JWT_SECRET);
+    const user = await Users.findById(decoded._id)
+    // console.log(user.recoveryMail)
+
+    const userMail = user.recoveryMail
+    const arr = userMail.split('@');
+    const leftSide = arr[0].split('');
+    const rightSide = arr[1];
+    let result = [];
+    // console.log(leftSide, rightSide)
+    leftSide.forEach( (e, i) => {
+        console.log(e, i)
+        if (i <= 1){
+            result.push(e)
+        }
+        else if (i >= leftSide.length-2){
+            result.push(e)
+        }
+        else{
+            result.push('*')
+        }
+    })  
+    console.log(leftSide)
+    result.push('@');
+    result.push(rightSide);
+    let resultStr = result.join('')
+
+    return res.render('OTP', {usermail: resultStr})
 }
 
 export const OTP = async (req, res) =>{
@@ -208,9 +238,3 @@ export const resetPassword = async (req, res) =>{
     res.redirect('/users/login')
 }
 
-export const getMyProfile = (req, res) => {
-    res.status(200).json({
-        success: true,
-        user: req.user
-    })
-}

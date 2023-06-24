@@ -19,7 +19,7 @@
                         <p>OTP Verification</p>
                     </div>
                     <div class="flex flex-row text-sm font-medium text-gray-400">
-                        <p>We have sent a code to your email a****@gmail.com</p>
+                        <p>We have sent a code to your email <%= locals.usermail %></p>
                     </div>
                 </div>
 
@@ -29,22 +29,22 @@
                             <div class="flex flex-row items-center justify-between mx-auto w-full max-w-xs">
                                 <div class="w-16 h-16 ">
                                     <input
-                                        class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                        class="input w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                         type="text" name="inputOne" id="" required>
                                 </div>
                                 <div class="w-16 h-16 ">
                                     <input
-                                        class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                        class="input w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                         type="text" name="inputTwo" id="">
                                 </div>
                                 <div class="w-16 h-16 ">
                                     <input
-                                        class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                        class="input w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                         type="text" name="inputThree" id="">
                                 </div>
                                 <div class="w-16 h-16 ">
                                     <input
-                                        class="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                                        class="input w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
                                         type="text" name="inputFour" id="">
                                 </div>
                             </div>
@@ -59,8 +59,8 @@
 
                                 <div
                                     class="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
-                                    <p>Didn't recieve code?</p> <a class="flex flex-row items-center text-blue-600"
-                                        href="http://" target="_blank" rel="noopener noreferrer">Resend</a>
+                                    <p>Didn't recieve code?</p> <a class="flex flex-row items-center text-blue-600 cursor-pointer"
+                                     rel="noopener noreferrer" id="resend">Resend</a>
                                 </div>
                             </div>
                         </div>
@@ -69,6 +69,7 @@
             </div>
         </div>
     </div>
+    <script src="../public/otp.js"></script>
 </body>
 
 </html>
